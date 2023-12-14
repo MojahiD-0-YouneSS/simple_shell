@@ -1,3 +1,4 @@
+#include "shell.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,7 +6,11 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#define MAX_COMMAND_LENGTH 100
+/*
+ * shell_loop - function is responsible for repeatedly prompting the user for input
+ * @command : comand provided by the user
+ * return 0
+ * */
 
 void execute_command(const char *command) {
     pid_t pid = fork();
@@ -27,7 +32,7 @@ void execute_command(const char *command) {
     }
 }
 
-int main() {
+void shell_loop() {
     char command[MAX_COMMAND_LENGTH];
 
     while (1) {
@@ -49,7 +54,4 @@ int main() {
         /* Execute the command */
         execute_command(command);
     }
-
-    return 0;
 }
-
