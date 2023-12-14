@@ -11,8 +11,15 @@ void execute_command(const char *command) {
 
     if (pid == 0) {
         /* Child process */
-        char **args = (char **)malloc(2 * sizeof(char *));
-        if (execve(command, args, NULL) == -1) {
+        char *args[] = { "/bin/sh", "-c", NULL, NULL };
+        args[2] = strdup(command); /* Duplicate the command to a non-const string */
+
+        if (args[2] == NULL) {
+            perror("Error duplicating command");
+            exit(EXIT_FAILURE);
+        }
+
+        if (execvp("/bin/sh", args) == -1) {
             perror("Error executing command");
             exit(EXIT_FAILURE);
         }
@@ -20,6 +27,10 @@ void execute_command(const char *command) {
         /* Parent process */
         int status;
         waitpid(pid, &status, 0);
+
+        if (WIFEXITED(status) && WEXITSTATUS(status) != 0) {
+            fprintf(stderr, "/bin/sh: 1: %s: not found\n", command);
+        }
     } else {
         perror("Fork failed");
         exit(EXIT_FAILURE);
