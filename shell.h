@@ -10,8 +10,12 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-
-void execute_command(const char *command);
 void shell_loop();
+void shell_init();
+void _clear();
+void _printstr(const char *str);
+char *_getenv(const char *name);
+size_t _strlen(const char *str);
+char *_strdup(const char *str);
 
 #endif 
