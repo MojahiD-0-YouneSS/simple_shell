@@ -2,7 +2,6 @@
 
 /**
  * main - Entry point of the program
- *@i: is an integer
  *
  * Return: Always 0 (success)
  */
