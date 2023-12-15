@@ -8,51 +8,52 @@
 
 /**
  * simple_shell - Simple UNIX command line interpreter
+ * Return: Always 0 (success)
  */
 void simple_shell(void)
 {
-	char command[MAX_COMMAND_LENGTH];
+    char command[MAX_COMMAND_LENGTH];
 
-	while (1)
-	{
-		printf("---------->  ");
-		if (fgets(command, MAX_COMMAND_LENGTH, stdin) == NULL)
-		{
-			printf("\n");
-			break; /* End of file (Ctrl+D) detected */
-		}
+    while (1)
+    {
+        printf("#cisfun$ ");
+        if (fgets(command, MAX_COMMAND_LENGTH, stdin) == NULL)
+        {
+            printf("\n");
+            break; /* End of file (Ctrl+D) detected */
+        }
 
-		command[strcspn(command, "\n")] = '\0'; /* Remove the newline character */
+        command[strcspn(command, "\n")] = '\0'; /* Remove the newline character */
 
-		if (*command != '\0')
-		{
-			pid_t pid, wpid;
-			int status;
+        if (*command != '\0')
+        {
+            pid_t pid, wpid;
+            int status;
 
-			pid = fork();
-			if (pid == 0)
-			{
-				/* Child process */
-				if (execlp(command, command, (char *)NULL) == -1)
-				{
-					perror("./shell");
-					exit(EXIT_FAILURE);
-				}
-			}
-			else if (pid < 0)
-			{
-				perror("./shell");
-			}
-			else
-			{
-				/* Parent process */
-				do
-				{
-					wpid = waitpid(pid, &status, WUNTRACED);
-				} while (!WIFEXITED(status) && !WIFSIGNALED(status));
-			}
-		}
-	}
+            pid = fork();
+            if (pid == 0)
+            {
+                /* Child process */
+                if (execlp(command, command, (char *)NULL) == -1)
+                {
+                    perror(command);
+                    exit(EXIT_FAILURE);
+                }
+            }
+            else if (pid < 0)
+            {
+                perror(command);
+            }
+            else
+            {
+                /* Parent process */
+                do
+                {
+                    wpid = waitpid(pid, &status, WUNTRACED);
+                } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+            }
+        }
+    }
 }
 
 /**
@@ -61,6 +62,7 @@ void simple_shell(void)
  */
 int main(void)
 {
-	simple_shell();
-	return (0);
+    simple_shell();
+    return (0);
 }
+
