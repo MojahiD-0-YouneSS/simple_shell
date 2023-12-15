@@ -1,10 +1,12 @@
 #include <stdio.h>
 
 /**
- * main - Entry point of the program
- *
+ * betty - Entry point of the program
+ *@i: is an integer
+
  * Return: Always 0 (success)
  */
+
 int betty(void)
 {
     int i;
