@@ -5,7 +5,7 @@
  *
  * Return: Always 0 (success)
  */
-int main(void)
+int betty(void)
 {
     int i;
 
