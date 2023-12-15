@@ -1,13 +1,13 @@
 #include <stdio.h>
 
 /**
- * betty - Entry point of the program
+ * main - Entry point of the program
  *@i: is an integer
 
  * Return: Always 0 (success)
  */
 
-int betty(void)
+int main(void)
 {
     int i;
 
