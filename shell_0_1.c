@@ -6,43 +6,61 @@
 
 #define MAX_COMMAND_LENGTH 100
 
-int main(void) {
-    char *command = NULL;
+/**
+ * simple_shell - Simple UNIX command line interpreter
+ */
+void simple_shell(void)
+{
+	char command[MAX_COMMAND_LENGTH];
 
-    do {
-        printf("#c_is_Here_$> ");
-        size_t len = 0;
+	while (1)
+	{
+		printf("---------->  ");
+		if (fgets(command, MAX_COMMAND_LENGTH, stdin) == NULL)
+		{
+			printf("\n");
+			break; /* End of file (Ctrl+D) detected */
+		}
 
-        if (getline(&command, &len, stdin) == -1) {
-            free(command);
-            exit(EXIT_SUCCESS);
-        }
+		command[strcspn(command, "\n")] = '\0'; /* Remove the newline character */
 
-        command[strcspn(command, "\n")] = '\0';
+		if (*command != '\0')
+		{
+			pid_t pid, wpid;
+			int status;
 
-        if (*command != '\0') {
-            pid_t pid, wpid;
-            int status;
-
-            pid = fork();
-            if (pid == 0) {
-
-                if (execlp(command, command, (char *)NULL) == -1) {
-                    perror("./shell");
-                    exit(EXIT_FAILURE);
-                }
-            } else if (pid < 0) {
-                perror("./shell");
-            } else {
-
-                do {
-                    wpid = waitpid(pid, &status, WUNTRACED);
-                } while (!WIFEXITED(status) && !WIFSIGNALED(status));
-            }
-        }
-
-    } while (1);
-
-    return 0;
+			pid = fork();
+			if (pid == 0)
+			{
+				/* Child process */
+				if (execlp(command, command, (char *)NULL) == -1)
+				{
+					perror("./shell");
+					exit(EXIT_FAILURE);
+				}
+			}
+			else if (pid < 0)
+			{
+				perror("./shell");
+			}
+			else
+			{
+				/* Parent process */
+				do
+				{
+					wpid = waitpid(pid, &status, WUNTRACED);
+				} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+			}
+		}
+	}
 }
 
+/**
+ * main - Example main function
+ * Return: Always 0 (success)
+ */
+int main(void)
+{
+	simple_shell();
+	return (0);
+}
